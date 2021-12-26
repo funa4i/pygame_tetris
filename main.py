@@ -5,24 +5,26 @@ screen = pygame.display.set_mode(size)
 x_col = 10
 y_col = 20
 fps = 60
-pos_y = 30
+pos_y_global = 30
+pos_x_global = 285
 
 class PlacePlay:
     # создание поля
     def __init__(self):
-        self.pole = []
         self.pole = [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] for i in range(20)]
-        self.pos_y2 = pos_y
+        self.pos_y = pos_y_global
+        self.pos_x = pos_x_global
+
 
     def render(self):
         pygame.draw.rect(screen, (255, 255, 255),
-                         (250, 30, 350, 700), 1)
+                         (250, 35, 350, 700), 1)
 
     def drop_item(self):
-        if pos_y % 35 == 0:
-            self.pos_y2 = pos_y
+        if pos_y_global % 35 == 0:
+            self.pos_y = pos_y_global
         pygame.draw.rect(screen, (255, 255, 255),
-                     (285, self.pos_y2, 35, 35))
+                         (self.pos_x, self.pos_y, 35, 35))
 
 clock = pygame.time.Clock()
 running = True
@@ -31,12 +33,14 @@ while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
+        if event.type == pygame.K_a:
+            play.pos_x -= 36
     screen.fill((0, 0, 0))
     play.render()
     play.drop_item()
     pygame.display.flip()
-    if pos_y < 694:
-        pos_y += 100 // fps
+    if pos_y_global < 720:
+        pos_y_global += 100 // fps
     clock.tick(fps)
 
 
