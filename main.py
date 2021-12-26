@@ -1,4 +1,5 @@
 import pygame
+import numpy as np
 
 size = width, height = 1366, 768
 screen = pygame.display.set_mode(size)
@@ -11,7 +12,7 @@ pos_x_global = 285
 class PlacePlay:
     # создание поля
     def __init__(self):
-        self.pole = [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] for i in range(20)]
+        self.pole = np.zeros((20, 10), dtype=np.int16)
         self.pos_y = pos_y_global
         self.pos_x = pos_x_global
 
@@ -29,27 +30,18 @@ class PlacePlay:
 clock = pygame.time.Clock()
 running = True
 play = PlacePlay()
-flag = True
 while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
-        if event.type == pygame.KEYDOWN:
-            if flag:
-                if event.key == pygame.K_a:
-                    if play.pos_x != 250:
-                        play.pos_x -= 35
-                if event.key == pygame.K_d:
-                    if play.pos_x != 565:
-                        play.pos_x += 35
+        if event.type == pygame.K_a:
+            play.pos_x -= 36
     screen.fill((0, 0, 0))
     play.render()
     play.drop_item()
     pygame.display.flip()
     if pos_y_global < 720:
         pos_y_global += 100 // fps
-    else:
-        flag = False
     clock.tick(fps)
 
 
