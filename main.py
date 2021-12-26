@@ -12,6 +12,7 @@ class PlacePlay:
     def __init__(self):
         self.pole = []
         self.pole = [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] for i in range(20)]
+        self.pos_y2 = pos_y
 
     def render(self):
         pygame.draw.rect(screen, (255, 255, 255),
@@ -19,8 +20,9 @@ class PlacePlay:
 
     def drop_item(self):
         if pos_y % 35 == 0:
-            pygame.draw.rect(screen, (255, 255, 255),
-                         (285, pos_y, 35, 35))
+            self.pos_y2 = pos_y
+        pygame.draw.rect(screen, (255, 255, 255),
+                     (285, self.pos_y2, 35, 35))
 
 clock = pygame.time.Clock()
 running = True
@@ -34,7 +36,7 @@ while running:
     play.drop_item()
     pygame.display.flip()
     if pos_y < 694:
-        pos_y += 100 / fps
+        pos_y += 100 // fps
     clock.tick(fps)
 
 
