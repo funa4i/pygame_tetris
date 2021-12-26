@@ -1,18 +1,24 @@
-# This is a sample Python script.
+import pygame
 
-# Press Shift+F10 to execute it or replace it with your code.
-# Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
-
-
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press Ctrl+F8 to toggle the breakpoint.
-    print('gfdwfw')
+size = width, height = 1600, 900
+screen = pygame.display.set_mode(size)
 
 
-# Press the green button in the gutter to run the script.
+class place_play:
+    # создание поля
+    def __init__(self):
+        pass
+
+
+
+running = True
+
+while running:
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            running = False
+    screen.fill((0, 0, 0))
+    pygame.display.flip()
 if __name__ == '__main__':
-    print_hi('PyCharm')
-
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
-#gggg
+    pygame.init()
+    pygame.display.set_caption('Иницилизация игры')
