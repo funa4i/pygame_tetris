@@ -28,7 +28,10 @@ class PlacePlay:
 
 
     def drop_item(self):
+        global pos_y_global, flag
         if pos_y_global % 35 == 0:
+            if not flag:
+                self.pole[0][4] = 1
             self.pos_y = pos_y_global
             self.a += 1
             self.pole[self.a][self.b] = 1
@@ -53,7 +56,6 @@ while running:
         if event.type == pygame.KEYDOWN:
             if flag:
                 if event.key == pygame.K_a:
-                    print(play.pos_x)
                     if play.pos_x != 250:
                         play.pos_x -= 35
                 if event.key == pygame.K_d:
@@ -71,6 +73,10 @@ while running:
         pos_y_global += 100 // fps
     else:
         flag = False
+        pos_y_global = 30
+        play.a = 0
+        play.b = 4
+        play.pos_x = 250 + (35 * play.b)
     clock.tick(fps)
 
     pygame.display.flip()
