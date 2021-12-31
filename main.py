@@ -7,15 +7,15 @@ x_col = 10
 y_col = 20
 fps = 60
 pos_y_global = 30
+flag = True
 
 
 class PlacePlay:
     def __init__(self):
         self.pole = np.zeros((20, 10), dtype=np.int16)
-        self.pos_y = pos_y_global
-        self.a = -1
-        self.b = 4
-        self.pos_x = 250 + (35 * self.b)
+        self.x = 4
+        self.y = 0
+
 
     def render(self):
         pygame.draw.rect(screen, (255, 255, 255),
@@ -24,22 +24,24 @@ class PlacePlay:
             for j in range(10):
                 if self.pole[i][j] == 1:
                     pygame.draw.rect(screen, (255, 255, 255),
-                                    (self.pos_x, self.pos_y, 35, 35))
+                                     (250 + j * 35, 35 + i * 35, 35, 35))
 
 
-    def drop_item(self):
-        global pos_y_global, flag
-        if pos_y_global % 35 == 0:
-            if not flag:
-                self.pole[0][4] = 1
-            self.pos_y = pos_y_global
-            self.a += 1
-            self.pole[self.a][self.b] = 1
-            self.pole[self.a - 1][self.b] = 0
-            self.pole[self.a][self.b] = 0
-            self.b = (self.pos_x - 250) // 35
-            self.pole[self.a][self.b] = 1
-            print(self.a, self.b)
+    def spawn_figure(self, num=0):
+        global flag, pos_y_global
+        self.x = 4
+        self.y = -1
+        self.pole[self.y][self.x] = 1
+        flag = True
+        pos_y_global = 30
+
+    def drop_item(self, x_change=0, y_change=1):
+        self.pole[self.y][self.x] = 0
+        if self.y != 19:
+            self.y += y_change
+        self.x += x_change
+        self.pole[self.y][self.x] = 1
+
 
 
 
@@ -48,7 +50,6 @@ class PlacePlay:
 clock = pygame.time.Clock()
 running = True
 play = PlacePlay()
-flag = True
 while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -56,27 +57,22 @@ while running:
         if event.type == pygame.KEYDOWN:
             if flag:
                 if event.key == pygame.K_a:
-                    if play.pos_x != 250:
-                        play.pos_x -= 35
+                    if play.x != 0:
+                        play.drop_item(-1, 0)
                 if event.key == pygame.K_d:
-                    if play.pos_x != 565:
-                        play.pos_x += 35
-                play.pole[play.a][play.b] = 1
-
-
-
+                    if play.x != 9:
+                        play.drop_item(1, 0)
     screen.fill((0, 0, 0))
     play.render()
     play.drop_item()
     pygame.display.flip()
     if pos_y_global < 720:
         pos_y_global += 100 // fps
+        if pos_y_global % 35 == 0:
+            play.drop_item(0, 1)
     else:
         flag = False
-        pos_y_global = 30
-        play.a = 0
-        play.b = 4
-        play.pos_x = 250 + (35 * play.b)
+        play.spawn_figure()
     clock.tick(fps)
 
     pygame.display.flip()
