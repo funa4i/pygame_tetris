@@ -6,7 +6,7 @@ screen = pygame.display.set_mode(size)
 x_col = 10
 y_col = 20
 fps = 60
-pos_y_global = 30
+pos_y_global = 0
 flag = True
 
 
@@ -30,15 +30,16 @@ class PlacePlay:
     def spawn_figure(self, num=0):
         global flag, pos_y_global
         self.x = 4
-        self.y = -1
+        self.y = 0
         self.pole[self.y][self.x] = 1
         flag = True
-        pos_y_global = 30
+        pos_y_global = 0
 
     def drop_item(self, x_change=0, y_change=1):
         self.pole[self.y][self.x] = 0
         if self.y != 19:
             self.y += y_change
+            print(self.y)
         self.x += x_change
         self.pole[self.y][self.x] = 1
 
@@ -62,13 +63,17 @@ while running:
                 if event.key == pygame.K_d:
                     if play.x != 9:
                         play.drop_item(1, 0)
+                if event.key == pygame.K_s:
+                    h = 19 - play.y
+                    play.drop_item(0, h)
+                    play.spawn_figure()
     screen.fill((0, 0, 0))
     play.render()
-    play.drop_item()
     pygame.display.flip()
-    if pos_y_global < 720:
+    if pos_y_global < 755:
         pos_y_global += 100 // fps
         if pos_y_global % 35 == 0:
+            print(pos_y_global)
             play.drop_item(0, 1)
     else:
         flag = False
