@@ -43,8 +43,17 @@ class PlacePlay:
         self.x += x_change
         self.pole[self.y][self.x] = 1
 
+class Kub:
+    def __init__(self):
+        self.nachaln_cord = [[0, 4], [0, 5], [1, 4], [1, 5]] # Не изменяять не прикаком уловии
+        self.cord = [[0, 4], [0, 5], [1, 4], [1, 5]]
 
-
+    def lowest_cord(self):
+        g = set()
+        for i in self.cord:
+            g.add(i[-1])
+        g = min(list(g))
+        return g
 
 
 
