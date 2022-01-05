@@ -9,13 +9,13 @@ fps = 60
 pos_y_global = 30
 pos_x_global = 285
 
+
 class PlacePlay:
     # создание поля
     def __init__(self):
         self.pole = np.zeros((20, 10), dtype=np.int16)
         self.pos_y = pos_y_global
         self.pos_x = pos_x_global
-
 
     def render(self):
         pygame.draw.rect(screen, (255, 255, 255),
@@ -26,6 +26,7 @@ class PlacePlay:
             self.pos_y = pos_y_global
         pygame.draw.rect(screen, (255, 255, 255),
                          (self.pos_x, self.pos_y, 35, 35))
+
 
 clock = pygame.time.Clock()
 running = True
@@ -54,8 +55,6 @@ while running:
     else:
         flag = False
     clock.tick(fps)
-
-
     pygame.display.flip()
 if __name__ == '__main__':
     pygame.init()
