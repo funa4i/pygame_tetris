@@ -18,7 +18,8 @@ stupen_1 = klass_figur.StupenVLevo()
 stupen_2 = klass_figur.StupenVPravo()
 g_russka = klass_figur.GPravil()
 g_ne_russka = klass_figur.GNePravil()
-instr_rand = tetris_random.FigurePool(random.randint(1, 100000000000))
+seed = random.randint(1, 100000000000)
+instr_rand = tetris_random.FigurePool(seed)
 pull_figur = []
 for i in range(5):
     pull_figur.append(instr_rand.get_figure())
