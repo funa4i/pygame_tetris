@@ -24,7 +24,7 @@ class FigurePool:
             self.pool.append(rand.choice(self.pool))  # Если не находим то просто закидываем рандомную
         self.pool.sort()  # В конце просто сортируем список для удобства
         if not debug:
-            return figure
+            return int(figure)
         else:
             return [exhausted_figure, figures_min, figure, self.pool]
 

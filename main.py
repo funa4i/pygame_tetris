@@ -2,7 +2,8 @@ import pygame
 import numpy as np
 import klass_figur
 import copy
-import sys
+import tetris_random
+import random
 
 size = width, height = 1366, 768
 screen = pygame.display.set_mode(size)
@@ -15,7 +16,12 @@ kvadrat = klass_figur.Kub()
 liniya = klass_figur.Pryamaya()
 stupen_1 = klass_figur.StupenVLevo()
 stupen_2 = klass_figur.StupenVPravo()
-
+g_russka = klass_figur.GPravil()
+g_ne_russka = klass_figur.GNePravil()
+instr_rand = tetris_random.FigurePool(random.randint(1, 100000000000))
+pull_figur = []
+for i in range(5):
+    pull_figur.append(instr_rand.get_figure)
 
 class PlacePlay:
     def __init__(self):
@@ -43,10 +49,16 @@ class PlacePlay:
             self.mest_polosh = copy.copy(liniya.cord)
         elif num == 3:
             stupen_1.return_to_start_cord()
-            self.mest_polosh = copy.copy(stupen_1)
+            self.mest_polosh = copy.copy(stupen_1.cord)
         elif num == 4:
             stupen_2.return_to_start_cord()
-            self.mest_polosh = copy.copy(stupen_2)
+            self.mest_polosh = copy.copy(stupen_2.cord)
+        elif num == 5:
+            g_russka.return_to_start_cord()
+            self.mest_polosh = copy.copy(g_russka.cord)
+        elif num == 6:
+            g_ne_russka.return_to_start_cord()
+            self.mest_polosh = copy.copy(g_ne_russka.cord)
         for i in self.mest_polosh:
             self.pole[i[0]][i[1]] = 1
 
@@ -70,10 +82,16 @@ class PlacePlay:
         g = list(g)
         return max(g)
 
+def take_new_figure():
+    pull_figur.append(instr_rand.get_figure())
+    znach = pull_figur[0]
+    del pull_figur[0]
+    return int(znach)  # фикс
+
 clock = pygame.time.Clock()
 running = True
 play = PlacePlay()
-play.spawn_figure(3)
+play.spawn_figure(take_new_figure())
 while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -87,7 +105,7 @@ while running:
                 if event.key == pygame.K_s:
                      h = 19 - play.lower_cord(play.mest_polosh)
                      play.drop_item(0, h)
-                     play.spawn_figure(3)
+                     play.spawn_figure(take_new_figure())
     screen.fill((0, 0, 0))
     play.render()
     pygame.display.flip()
@@ -98,7 +116,7 @@ while running:
             play.drop_item(0, 1)
     else:
         flag = False
-        play.spawn_figure(3)
+        play.spawn_figure(take_new_figure())
     clock.tick(fps)
     pygame.display.flip()
 
