@@ -23,6 +23,7 @@ pull_figur = []
 for i in range(5):
     pull_figur.append(instr_rand.get_figure)
 
+
 class PlacePlay:
     def __init__(self):
         self.pole = np.zeros((20, 10), dtype=np.int16)
@@ -62,7 +63,6 @@ class PlacePlay:
         for i in self.mest_polosh:
             self.pole[i[0]][i[1]] = 1
 
-
     def drop_item(self, x_change=0, y_change=1):
         for i in self.mest_polosh:
             self.pole[i[0]][i[1]] = 0
@@ -82,11 +82,13 @@ class PlacePlay:
         g = list(g)
         return max(g)
 
+
 def take_new_figure():
     pull_figur.append(instr_rand.get_figure())
     znach = pull_figur[0]
     del pull_figur[0]
     return int(znach)  # фикс
+
 
 clock = pygame.time.Clock()
 running = True
@@ -103,9 +105,9 @@ while running:
                 if event.key == pygame.K_d:
                     play.drop_item(1, 0)
                 if event.key == pygame.K_s:
-                     h = 19 - play.lower_cord(play.mest_polosh)
-                     play.drop_item(0, h)
-                     play.spawn_figure(take_new_figure())
+                    h = 19 - play.lower_cord(play.mest_polosh)
+                    play.drop_item(0, h)
+                    play.spawn_figure(take_new_figure())
     screen.fill((0, 0, 0))
     play.render()
     pygame.display.flip()
@@ -119,8 +121,6 @@ while running:
         play.spawn_figure(take_new_figure())
     clock.tick(fps)
     pygame.display.flip()
-
-
 
 if __name__ == '__main__':
     pygame.init()
