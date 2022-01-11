@@ -1,61 +1,109 @@
 import pygame
 import numpy as np
+import klass_figur
+import copy
+import sys
 
 size = width, height = 1366, 768
 screen = pygame.display.set_mode(size)
 x_col = 10
 y_col = 20
 fps = 60
-pos_y_global = 30
-pos_x_global = 285
+pos_y_global = 0
+flag = True
+kvadrat = klass_figur.Kub()
+liniya = klass_figur.Pryamaya()
+stupen_1 = klass_figur.StupenVLevo()
+stupen_2 = klass_figur.StupenVPravo()
 
 
 class PlacePlay:
-    # создание поля
     def __init__(self):
         self.pole = np.zeros((20, 10), dtype=np.int16)
-        self.pos_y = pos_y_global
-        self.pos_x = pos_x_global
+        self.mest_polosh = []
 
     def render(self):
         pygame.draw.rect(screen, (255, 255, 255),
                          (250, 35, 350, 700), 1)
+        for i in range(20):
+            for j in range(10):
+                if self.pole[i][j] == 1:
+                    pygame.draw.rect(screen, (255, 255, 255),
+                                     (250 + j * 35, 35 + i * 35, 35, 35))
 
-    def drop_item(self):
-        if pos_y_global % 35 == 0:
-            self.pos_y = pos_y_global
-        pygame.draw.rect(screen, (255, 255, 255),
-                         (self.pos_x, self.pos_y, 35, 35))
+    def spawn_figure(self, num=0):
+        global flag, pos_y_global
+        flag = True
+        pos_y_global = 0
+        # -------------------------
+        if num == 1:
+            self.mest_polosh = copy.deepcopy(kvadrat.cord)
+        elif num == 2:
+            liniya.return_to_start_cord()
+            self.mest_polosh = copy.copy(liniya.cord)
+        elif num == 3:
+            stupen_1.return_to_start_cord()
+            self.mest_polosh = copy.copy(stupen_1)
+        elif num == 4:
+            stupen_2.return_to_start_cord()
+            self.mest_polosh = copy.copy(stupen_2)
+        for i in self.mest_polosh:
+            self.pole[i[0]][i[1]] = 1
 
+
+    def drop_item(self, x_change=0, y_change=1):
+        for i in self.mest_polosh:
+            self.pole[i[0]][i[1]] = 0
+        if self.lower_cord(self.mest_polosh) != 19:
+            for i in range(len(self.mest_polosh)):
+                self.mest_polosh[i][0] += y_change
+        for i in range(len(self.mest_polosh)):
+            vrem = (self.mest_polosh[i][-1] + x_change) % 10
+            self.mest_polosh[i][-1] = vrem
+        for i in self.mest_polosh:
+            self.pole[i[0]][i[1]] = 1
+
+    def lower_cord(self, sp):
+        g = set()
+        for i in sp:
+            g.add(i[0])
+        g = list(g)
+        return max(g)
 
 clock = pygame.time.Clock()
 running = True
 play = PlacePlay()
-flag = True
+play.spawn_figure(3)
 while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
-        if event.type == pygame.K_a:
-            play.pos_x -= 36
         if event.type == pygame.KEYDOWN:
             if flag:
                 if event.key == pygame.K_a:
-                    if play.pos_x != 250:
-                        play.pos_x -= 35
+                    play.drop_item(-1, 0)
                 if event.key == pygame.K_d:
-                    if play.pos_x != 565:
-                        play.pos_x += 35
+                    play.drop_item(1, 0)
+                if event.key == pygame.K_s:
+                     h = 19 - play.lower_cord(play.mest_polosh)
+                     play.drop_item(0, h)
+                     play.spawn_figure(3)
     screen.fill((0, 0, 0))
     play.render()
-    play.drop_item()
     pygame.display.flip()
-    if pos_y_global < 720:
-        pos_y_global += 100 // fps
+    if pos_y_global < 755:
+        pos_y_global += (100 // fps) * 0.5
+        if pos_y_global % 35 == 0:
+            print(pos_y_global)
+            play.drop_item(0, 1)
     else:
         flag = False
+        play.spawn_figure(3)
     clock.tick(fps)
     pygame.display.flip()
+
+
+
 if __name__ == '__main__':
     pygame.init()
     pygame.display.set_caption('Иницилизация игры')
