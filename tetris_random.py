@@ -26,7 +26,7 @@ class FigurePool:
         if not debug:
             return int(figure)
         else:
-            return [exhausted_figure, figures_min, figure, self.pool]
+            return exhausted_figure, figures_min, figure, self.pool
 
 
 if __name__ == '__main__':  # Дебаг рандома

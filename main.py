@@ -21,7 +21,7 @@ g_ne_russka = klass_figur.GNePravil()
 instr_rand = tetris_random.FigurePool(random.randint(1, 100000000000))
 pull_figur = []
 for i in range(5):
-    pull_figur.append(instr_rand.get_figure)
+    pull_figur.append(instr_rand.get_figure())
 
 
 class PlacePlay:
@@ -87,7 +87,7 @@ def take_new_figure():
     pull_figur.append(instr_rand.get_figure())
     znach = pull_figur[0]
     del pull_figur[0]
-    return int(znach)  # фикс
+    return znach  # фикс
 
 
 clock = pygame.time.Clock()
