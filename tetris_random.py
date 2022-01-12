@@ -26,15 +26,15 @@ class FigurePool:
         if not debug:
             return int(figure)
         else:
-            return [exhausted_figure, figures_min, figure, self.pool]
+            return exhausted_figure, figures_min, figure, self.pool
 
 
 if __name__ == '__main__':  # Дебаг рандома
     try:
         seed = int(input('Введите семя\n'))
     except ValueError:
-        pass
-    pool = FigurePool()
+        seed = None
+    pool = FigurePool(seed)
     for i in range(10):
         debug_pool = pool.get_figure(debug=True)
         print(f'Иссушенная фигура {debug_pool[0]}\n'

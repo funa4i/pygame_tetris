@@ -43,7 +43,6 @@ class PlacePlay:
         global flag, pos_y_global
         flag = True
         pos_y_global = 0
-        print(pull_figur)
         # -------------------------
         if num == 1:
             self.mest_polosh = copy.deepcopy(kvadrat_figura.cord)
@@ -112,7 +111,7 @@ def take_new_figure():
     pull_figur.append(instr_rand.get_figure())
     znach = pull_figur[0]
     del pull_figur[0]
-    return int(znach)
+    return znach
 
 
 clock = pygame.time.Clock()
