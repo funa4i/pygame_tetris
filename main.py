@@ -129,21 +129,9 @@ while running:
                 if event.key == pygame.K_d:
                     play.drop_item(1, 0)
                 if event.key == pygame.K_s:
-                    g = play.pole[-1]
-                    print(play.mest_polosh[0][-1])
-                    print(play.mest_polosh[-1][-1] + 1)
-                    spis = []
-                    for i in range(play.mest_polosh[0][-1], play.mest_polosh[-1][-1] + 1):
-                        print(g[i])
-                        spis.append(g[i])
-                    print(spis)
-                    if sum(spis) == 0:
-                        l = 19 - play.lower_cord(play.mest_polosh)
-                        play.drop_item(0, l)
-                    else:
-                        while check_flag_drop:
-                            play.drop_item(0, 1)
-                            print('f')
+                    while play.lower_cord(play.mest_polosh) != 19 and check_flag_drop:
+                        play.drop_item(0, 1)
+                        print('f')
     screen.fill((0, 0, 0))
     play.render()
     pygame.display.flip()
