@@ -21,6 +21,7 @@ g_ne_russka_figura = klass_figur.GNePravil()
 t_figura = klass_figur.TObraz()
 instr_rand = tetris_random.FigurePool(random.randint(1, 100000000000))
 pull_figur = []
+check_flag_drop = True
 for i in range(5):
     pull_figur.append(instr_rand.get_figure())
 
@@ -68,23 +69,22 @@ class PlacePlay:
             self.pole[i[0]][i[1]] = 1
 
     def drop_item(self, x_change=0, y_change=1):
-        locl_flag = True
+        global check_flag_drop
+        check_flag_drop = True
         locl_flag_2 = True
         "Очень стршная проеверка 1"
         for qw in self.mest_polosh:  # Проверка на возможность упасть
             vr_sp = [qw[0] + 1, qw[1]]
-            if (self.pole[qw[0] + 1][qw[1]] == 1) and not vr_sp in self.mest_polosh:
-                locl_flag = False
+            if (self.pole[qw[0] + 1][qw[1]] == 1) and vr_sp not in self.mest_polosh:
+                check_flag_drop = False
         "Очень стршная проеверка 2"
         if x_change != 0:
             for i in range(len(self.mest_polosh)):  # Проверка на возможность движение
                 vrem = (self.mest_polosh[i][-1] + x_change) % 10
-                print(vrem)
                 chek = [self.mest_polosh[i][0], vrem]
-                print(chek)
-                if self.pole[chek[0]][chek[-1]] == 1 and not chek in self.mest_polosh:
+                if self.pole[chek[0]][chek[-1]] == 1 and chek not in self.mest_polosh:
                     locl_flag_2 = False
-        if locl_flag:
+        if check_flag_drop:
             for i in self.mest_polosh:
                 self.pole[i[0]][i[1]] = 0
             if self.lower_cord(self.mest_polosh) != 19:
@@ -129,16 +129,27 @@ while running:
                 if event.key == pygame.K_d:
                     play.drop_item(1, 0)
                 if event.key == pygame.K_s:
-                    h = 19 - play.lower_cord(play.mest_polosh)
-                    play.drop_item(0, h)
-                    play.spawn_figure(take_new_figure())
+                    g = play.pole[-1]
+                    print(play.mest_polosh[0][-1])
+                    print(play.mest_polosh[-1][-1] + 1)
+                    spis = []
+                    for i in range(play.mest_polosh[0][-1], play.mest_polosh[-1][-1] + 1):
+                        print(g[i])
+                        spis.append(g[i])
+                    print(spis)
+                    if sum(spis) == 0:
+                        l = 19 - play.lower_cord(play.mest_polosh)
+                        play.drop_item(0, l)
+                    else:
+                        while check_flag_drop:
+                            play.drop_item(0, 1)
+                            print('f')
     screen.fill((0, 0, 0))
     play.render()
     pygame.display.flip()
     if play.lower_cord(play.mest_polosh) != 19:
         pos_y_global += (100 // fps) * 4
         if pos_y_global % 35 == 0:
-            print(pos_y_global)
             play.drop_item(0, 1)
     else:
         flag = False
