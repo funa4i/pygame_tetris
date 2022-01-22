@@ -35,7 +35,7 @@ if __name__ == '__main__':  # Дебаг рандома
     except ValueError:
         seed = None
     pool = FigurePool(seed)
-    for i in range(10):
+    for i in range(100):
         debug_pool = pool.get_figure(debug=True)
         print(f'Иссушенная фигура {debug_pool[0]}\n'
               f'Количество иссушенных фигур {debug_pool[1]}\n'

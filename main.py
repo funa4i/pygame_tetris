@@ -4,6 +4,8 @@ import klass_figur
 import copy
 import tetris_random
 import random
+import pygame_widgets
+
 
 size = width, height = 1366, 768
 screen = pygame.display.set_mode(size)
@@ -123,6 +125,7 @@ running = True
 play = PlacePlay()
 play.spawn_figure(2)
 while running:
+    pygame.display.set_caption(f'FPS: {clock.get_fps()}')
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
