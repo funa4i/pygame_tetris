@@ -22,6 +22,8 @@ t_figura = klass_figur.TObraz()
 instr_rand = tetris_random.FigurePool(random.randint(1, 100000000000))
 pull_figur = []
 check_flag_drop = True
+now_fig = 2
+polosh_povovrota_figuri = 0
 for i in range(5):
     pull_figur.append(instr_rand.get_figure())
 
@@ -106,10 +108,12 @@ class PlacePlay:
         g = list(g)
         return max(g)
 
-
 def take_new_figure():
+    global now_fig, polosh_povovrota_figuri
+    polosh_povovrota_figuri = 0
     pull_figur.append(instr_rand.get_figure())
     znach = pull_figur[0]
+    now_fig = znach
     del pull_figur[0]
     return znach
 
@@ -117,7 +121,7 @@ def take_new_figure():
 clock = pygame.time.Clock()
 running = True
 play = PlacePlay()
-play.spawn_figure(take_new_figure())
+play.spawn_figure(2)
 while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -131,7 +135,18 @@ while running:
                 if event.key == pygame.K_s:
                     while play.lower_cord(play.mest_polosh) != 19 and check_flag_drop:
                         play.drop_item(0, 1)
-                        print('f')
+                if event.key == pygame.K_e:
+                    for i in play.mest_polosh:
+                        play.pole[i[0]][i[1]] = 0
+                    if now_fig == 2:
+                        liniya_figura.povovrot(play.pole, polosh_povovrota_figuri, 1)
+                    for i in play.mest_polosh:
+                        play.pole[i[0]][i[1]] = 1
+                if event.key == pygame.K_q:
+                    for i in play.mest_polosh:
+                        play.pole[i[0]][i[1]] = 0
+                    if now_fig == 2:
+                        liniya_figura.povovrot(play.pole, polosh_povovrota_figuri, -1)
     screen.fill((0, 0, 0))
     play.render()
     pygame.display.flip()
