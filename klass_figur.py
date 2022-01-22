@@ -18,18 +18,23 @@ class Pryamaya:
         self.cord = copy.deepcopy(self.CORD_NACH)
 
     def povovrot(self, pole, polos_povor, pov):
-        polos_povor_vn = (abs(polos_povor + pov)) % 2
+        print(polos_povor, pov)
+        polos_povor_vn = (polos_povor + pov) % 2
+        print(polos_povor_vn)
         print(self.cord)
         if polos_povor_vn == 1:
+            print('f')
             vrem = iszm_cord(self.cord, self.vert_pol)
             if check_next_cord(pole, vrem, self.cord):
                 for i in range(len(self.cord)):
                     self.cord[i] = vrem[i]
+                return polos_povor_vn
         else:
             vrem = iszm_cord(self.cord, self.gor_pol)
             if check_next_cord(pole, vrem, self.cord):
                 for i in range(len(self.cord)):
                     self.cord[i] = vrem[i]
+                return polos_povor_vn
 
 
 class StupenVLevo:
@@ -87,7 +92,6 @@ def max_cord(sp):
 
 def iszm_cord(last, ch):
     for i in range(len(last)):
-        print(last, ch)
         l, l2 = last[i][0] + ch[i][0], last[i][-1] + ch[i][-1]
         last[i][0] = l
         last[i][-1] = l2

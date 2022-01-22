@@ -5,8 +5,10 @@ import copy
 import tetris_random
 import random
 import pygame_widgets
+import os
+import sys
 
-
+spisok_sprite = []
 size = width, height = 1366, 768
 screen = pygame.display.set_mode(size)
 x_col = 10
@@ -26,6 +28,30 @@ pull_figur = []
 check_flag_drop = True
 now_fig = 2
 polosh_povovrota_figuri = 0
+all_sprites = pygame.sprite.Group()
+gl = []
+
+def load_image(name, colorkey=None):
+    fullname = os.path.join('Data/Main_theme', name)
+    if not os.path.isfile(fullname):
+        print(f"Файл с изображением '{fullname}' не найден")
+        sys.exit()
+    image = pygame.image.load(fullname)
+    return image
+
+
+for i in range(20):
+    buff = []
+    for j in range(10):
+        spri = pygame.sprite.Sprite(all_sprites)
+        spri.image = pygame.Surface([35, 35])
+        spri.image.fill(pygame.Color('white'))
+        spri.rect = spri.image.get_rect()
+        spri.rect.x = 0
+        spri.rect.y = 0
+        buff.append(spri)
+    gl.append(buff)
+
 for i in range(5):
     pull_figur.append(instr_rand.get_figure())
 
@@ -41,8 +67,11 @@ class PlacePlay:
         for i in range(20):
             for j in range(10):
                 if self.pole[i][j] == 1:
-                    pygame.draw.rect(screen, (255, 255, 255),
-                                     (250 + j * 35, 35 + i * 35, 35, 35))
+                    gl[i][j].rect.x = 250 + j * 35
+                    gl[i][j].rect.y = 35 + i * 35
+                    gl[i][j].update()
+                    # pygame.draw.rect(screen, (255, 255, 255),
+                    #                  (250 + j * 35, 35 + i * 35, 35, 35))
 
     def spawn_figure(self, num=0):
         global flag, pos_y_global
@@ -110,6 +139,7 @@ class PlacePlay:
         g = list(g)
         return max(g)
 
+
 def take_new_figure():
     global now_fig, polosh_povovrota_figuri
     polosh_povovrota_figuri = 0
@@ -120,10 +150,21 @@ def take_new_figure():
     return znach
 
 
+def set_0():
+    for i in play.mest_polosh:
+        play.pole[i[0]][i[1]] = 0
+
+
+def set_1():
+    for i in play.mest_polosh:
+        play.pole[i[0]][i[1]] = 1
+
+
 clock = pygame.time.Clock()
 running = True
 play = PlacePlay()
 play.spawn_figure(2)
+
 while running:
     pygame.display.set_caption(f'FPS: {clock.get_fps()}')
     for event in pygame.event.get():
@@ -139,22 +180,20 @@ while running:
                     while play.lower_cord(play.mest_polosh) != 19 and check_flag_drop:
                         play.drop_item(0, 1)
                 if event.key == pygame.K_e:
-                    for i in play.mest_polosh:
-                        play.pole[i[0]][i[1]] = 0
+                    set_0()
                     if now_fig == 2:
-                        liniya_figura.povovrot(play.pole, polosh_povovrota_figuri, 1)
-                    for i in play.mest_polosh:
-                        play.pole[i[0]][i[1]] = 1
+                        polosh_povovrota_figuri = liniya_figura.povovrot(play.pole, polosh_povovrota_figuri, 1)
+                    set_1()
                 if event.key == pygame.K_q:
-                    for i in play.mest_polosh:
-                        play.pole[i[0]][i[1]] = 0
+                    set_0()
                     if now_fig == 2:
-                        liniya_figura.povovrot(play.pole, polosh_povovrota_figuri, -1)
+                        polosh_povovrota_figuri = liniya_figura.povovrot(play.pole, polosh_povovrota_figuri, -1)
+                    set_1()
     screen.fill((0, 0, 0))
     play.render()
     pygame.display.flip()
     if play.lower_cord(play.mest_polosh) != 19:
-        pos_y_global += (100 // fps) * 4
+        pos_y_global += (100 // fps) * 2
         if pos_y_global % 35 == 0:
             play.drop_item(0, 1)
     else:
